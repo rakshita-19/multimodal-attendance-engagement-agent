@@ -4,6 +4,10 @@
 **Academic Degree:** Final-Year B.Tech Computer Science and Engineering  
 **Evaluation Platform:** Board Infinity & College Capstone Evaluation  
 **Date:** October 2026  
+**Student Name / Roll No:** `[Insert Your Name & Roll Number]`  
+**📺 Project Demo Video Link:** `[Insert your Loom / YouTube Unlisted / Google Drive Link]`  
+**🌐 Live Deployed Application:** `http://127.0.0.1:5000` *(or public URL)*  
+**📂 GitHub Repository Link:** `[Insert Your GitHub Repository URL]`  
 
 ---
 

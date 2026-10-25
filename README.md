@@ -12,6 +12,16 @@
 
 ---
 
+### 🔗 Project & Demo Links
+
+* **📺 Video Demonstration Link:** `[Add your Loom / YouTube / Google Drive Video Link Here]`
+* **🌐 Live Deployed Application:** `http://127.0.0.1:5000` *(or your deployed public URL)*
+* **📂 GitHub Repository:** `[Add your GitHub Repository URL Here]`
+* **📑 Board Infinity Milestone Report:** [`docs/BOARD_INFINITY_SUBMISSION.md`](docs/BOARD_INFINITY_SUBMISSION.md)
+* **🎯 Step-by-Step Viva & Demo Script:** [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md)
+
+---
+
 ## 1. Project Overview
 
 The **Multimodal Attendance & Engagement Agent** is a privacy-first, locally deployable classroom intelligence platform designed to assist instructors by:
