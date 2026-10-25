@@ -13,7 +13,7 @@ class Config:
     
     SECRET_KEY = os.getenv("SECRET_KEY", "classroom-intelligence-local-secret-2026")
     DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes")
-    HOST = os.getenv("HOST", "127.0.0.1")
+    HOST = os.getenv("HOST", "0.0.0.0")
     PORT = int(os.getenv("PORT", 5000))
 
     # Persistence

@@ -87,5 +87,10 @@ def create_app(test_config=None) -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    print(f"Starting Multimodal Classroom Intelligence Server on http://{Config.HOST}:{Config.PORT}")
-    app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG)
+    print("\n" + "=" * 60)
+    print(" Multimodal Attendance & Engagement Agent is RUNNING!")
+    print(f" -> Open in browser: http://127.0.0.1:{Config.PORT}")
+    print(f" -> Alternative URL: http://localhost:{Config.PORT}")
+    print(" -> Press Ctrl + C in this terminal to stop.")
+    print("=" * 60 + "\n")
+    app.run(host=Config.HOST, port=Config.PORT, debug=False)
