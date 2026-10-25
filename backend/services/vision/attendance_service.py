@@ -36,6 +36,18 @@ class VisionAttendanceService:
         if not cap.isOpened():
             raise ValueError(f"Unable to open video source at: {video_path}")
 
+        # Validate that OpenCV can decode frames from this container & codec
+        ret, first_frame = cap.read()
+        if not ret or first_frame is None:
+            cap.release()
+            raise ValueError(
+                f"Video file '{path.name}' could not be decoded. "
+                f"0 frames were readable. The codec may be unsupported or the file is corrupted. "
+                f"Please ensure you upload a standard H.264 or MPEG-4 MP4/AVI video."
+            )
+        # Rewind to first frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 0 or np.isnan(fps):
