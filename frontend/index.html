@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multimodal Attendance & Engagement Agent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-section">
+        <div class="logo-badge">M</div>
+        <div class="logo-title">
+          <h1>Multimodal Attendance & Engagement Agent</h1>
+          <p>Privacy-Preserving Classroom Intelligence System • Local Processing</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-export-attendance" class="btn btn-outline btn-sm">
+          <span>📥</span> Export Attendance CSV
+        </button>
+        <button id="btn-export-analytics" class="btn btn-outline btn-sm">
+          <span>📊</span> Export Analytics CSV
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading Bar Indicator -->
+  <div id="loading-indicator" class="loading-indicator" style="display: none; background: #e0e7ff; border-bottom: 1px solid #c7d2fe;">
+    <div class="spinner"></div>
+    <span class="loading-msg">Processing session media locally...</span>
+  </div>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    
+    <!-- Left Sidebar: Session Control & Upload -->
+    <aside class="sidebar">
+      
+      <!-- Quick Demo Card -->
+      <div class="card" style="border: 2px solid #6366f1; background: #fdfefe;">
+        <div class="card-title">
+          <span>🚀 Instant Evaluation</span>
+          <span class="badge badge-present">Ready</span>
+        </div>
+        <p style="font-size: 0.78rem; color: #475569; margin-bottom: 0.85rem;">
+          Generate a synthetic 4-student lecture scene with speech and run the full multimodal agent locally.
+        </p>
+        <button id="btn-launch-demo" class="btn btn-demo">
+          <span>▶</span> Launch Interactive Demo
+        </button>
+      </div>
+
+      <!-- New Session Card -->
+      <div class="card">
+        <div class="card-title">Create Classroom Session</div>
+        <div class="form-group">
+          <label class="form-label" for="session-title-input">Session Title</label>
+          <input type="text" id="session-title-input" class="form-input" placeholder="e.g. CS401 Lecture 12">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="session-notes-input">Notes / Room</label>
+          <input type="text" id="session-notes-input" class="form-input" placeholder="e.g. Hall A, Row 1-4">
+        </div>
+        <button id="btn-new-session" class="btn btn-outline" style="width: 100%;">
+          <span>+</span> Create Blank Session
+        </button>
+      </div>
+
+      <!-- Media Ingestion Card -->
+      <div class="card">
+        <div class="card-title">Media Upload</div>
+        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.75rem;">
+          Select recorded video or audio files. Files are processed locally and discarded per retention policy.
+        </p>
+
+        <!-- Video Upload -->
+        <div class="file-dropzone">
+          <input type="file" id="video-file-input" accept="video/mp4,video/avi,video/quicktime,video/x-matroska">
+          <div class="file-dropzone-icon">📹</div>
+          <div class="file-dropzone-text">Choose Video (MP4, AVI, MOV)</div>
+          <div id="selected-video-name" class="selected-filename"></div>
+        </div>
+
+        <!-- Audio Upload -->
+        <div class="file-dropzone">
+          <input type="file" id="audio-file-input" accept="audio/wav,audio/mpeg,audio/ogg,audio/flac">
+          <div class="file-dropzone-icon">🎙️</div>
+          <div class="file-dropzone-text">Choose Audio (WAV, MP3, OGG)</div>
+          <div id="selected-audio-name" class="selected-filename"></div>
+        </div>
+
+        <button id="btn-upload-process" class="btn btn-primary" style="width: 100%; margin-top: 0.4rem;">
+          <span>⚙️</span> Ingest & Run Agent
+        </button>
+      </div>
+
+      <!-- Sessions History -->
+      <div class="card">
+        <div class="card-title">Recorded Sessions</div>
+        <div id="sessions-list" class="session-list">
+          <div style="font-size: 0.75rem; color: #64748b;">Loading sessions...</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Right Dashboard View -->
+    <section class="dashboard-content">
+
+      <!-- Active Session Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <h2 id="active-session-title" style="font-size: 1.35rem; font-weight: 700; color: #0f172a;">No Session Selected</h2>
+          <p id="active-session-status" style="font-size: 0.8rem; color: #64748b; margin-top: 0.15rem;">Select a past session or launch a demo.</p>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="dashboard-empty-state" class="empty-state card">
+        <div class="empty-state-icon">📊</div>
+        <h3 style="font-size: 1.1rem; color: #1e293b;">No Session Analytics Loaded</h3>
+        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.35rem; max-width: 480px; margin-left: auto; margin-right: auto;">
+          Click <strong>"Launch Interactive Demo"</strong> on the left sidebar to generate realistic classroom data and see the complete intelligence pipeline in action.
+        </p>
+      </div>
+
+      <!-- Main Populated Content -->
+      <div id="dashboard-main-content" style="display: none; flex-direction: column; gap: 1.5rem;">
+
+        <!-- Ethical & Privacy Compliance Banner -->
+        <div class="ethical-banner">
+          <div class="ethical-icon">🛡️</div>
+          <div class="ethical-text">
+            <h4>Privacy & Pedagogical Integrity Safeguard</h4>
+            <div id="ethical-banner-text">Loading privacy notice...</div>
+          </div>
+        </div>
+
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: #ecfdf5; color: #10b981;">👥</div>
+            <div class="kpi-info">
+              <h3>Attendance Rate</h3>
+              <div id="kpi-attendance-rate" class="kpi-val">0%</div>
+              <div class="kpi-sub">Sustained Presence</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: #eef2ff; color: #4f46e5;">🎯</div>
+            <div class="kpi-info">
+              <h3>Attendees Tracked</h3>
+              <div id="kpi-total-tracked" class="kpi-val">0 / 0</div>
+              <div class="kpi-sub">Unique Participant Tracks</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: #f0fdf4; color: #16a34a;">⚡</div>
+            <div class="kpi-info">
+              <h3>Engagement Index</h3>
+              <div id="kpi-engagement-score" class="kpi-val">0 / 100</div>
+              <div class="kpi-sub">Composite Multimodal</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: #fdf4ff; color: #c026d3;">💬</div>
+            <div class="kpi-info">
+              <h3>Dominant Mode</h3>
+              <div id="kpi-dominant-mode" class="kpi-val" style="font-size: 1.05rem;">N/A</div>
+              <div class="kpi-sub">Interaction Pattern</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: #fffbeb; color: #d97706;">⏱️</div>
+            <div class="kpi-info">
+              <h3>Session Duration</h3>
+              <div id="kpi-session-duration" class="kpi-val">0s</div>
+              <div class="kpi-sub">Processed Time</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Visual Analytics Section -->
+        <div class="charts-grid">
+          
+          <!-- Timeline Chart -->
+          <div class="chart-card">
+            <div class="card-title">
+              <span>Multimodal Composite Engagement Timeline</span>
+              <span class="badge badge-mode">5s Windows</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-engagement-timeline"></canvas>
+            </div>
+          </div>
+
+          <!-- Interaction Mode Distribution -->
+          <div class="chart-card">
+            <div class="card-title">Interaction Mode Distribution</div>
+            <div class="chart-container">
+              <canvas id="chart-mode-doughnut"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Secondary Chart: Headcount & Acoustic Correlation -->
+        <div class="chart-card">
+          <div class="card-title">
+            <span>Observable Signals Correlation (Headcount vs. Speech & Motion)</span>
+            <span style="font-size: 0.72rem; color: #64748b;">Synchronized Acoustic & Visual Indicators</span>
+          </div>
+          <div class="chart-container" style="height: 220px;">
+            <canvas id="chart-multimodal-signals"></canvas>
+          </div>
+        </div>
+
+        <!-- Attendance & Identity Mapping Section -->
+        <div class="card">
+          <div class="card-title">
+            <span>Participant Attendance & Teacher Review</span>
+            <span style="font-size: 0.75rem; color: #64748b;">Manual mapping ensures ethical real-world identification</span>
+          </div>
+          <div class="table-responsive">
+            <table class="attendance-table">
+              <thead>
+                <tr>
+                  <th>Tracker ID</th>
+                  <th>Student Name</th>
+                  <th>Attendance Status</th>
+                  <th>Presence Duration</th>
+                  <th>Observed Window</th>
+                  <th>Identity Action</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-table-body">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pedagogical Recommendations -->
+        <div class="card">
+          <div class="card-title">
+            <span>Pedagogical Teaching Recommendations</span>
+            <span style="font-size: 0.75rem; color: #64748b;">Rule-Based Explainable Feedback</span>
+          </div>
+          <div id="recommendations-container" class="recs-container">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Teacher Review / Student Name Mapping Modal -->
+  <div id="mapping-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Map Student Identity</h3>
+        <button id="btn-close-modal" class="close-btn">&times;</button>
+      </div>
+      <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 1rem;">
+        Correlate transient computer vision track ID with the student's verified roll call name.
+      </p>
+      <input type="hidden" id="modal-track-id">
+      
+      <div class="form-group">
+        <label class="form-label" for="modal-student-name">Student Full Name</label>
+        <input type="text" id="modal-student-name" class="form-input" placeholder="e.g. Alex Mercer">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="modal-notes">Instructor Review Notes</label>
+        <input type="text" id="modal-notes" class="form-input" placeholder="e.g. Seated in Row 2, confirmed present">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.25rem;">
+        <button class="btn btn-outline btn-sm" onclick="window.app.closeMappingModal()">Cancel</button>
+        <button id="btn-save-mapping" class="btn btn-primary btn-sm">Save Mapping</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
